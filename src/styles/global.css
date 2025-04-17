@@ -1,0 +1,26 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: theme(colors.slate.50);
+  --text-primary: theme(colors.slate.900);
+}
+
+.dark {
+  --bg-primary: theme(colors.slate.900);
+  --text-primary: theme(colors.slate.50);
+}
+
+body {
+  @apply bg-[var(--bg-primary)] text-[var(--text-primary)];
+  font-family: "Inter var", "Poppins", sans-serif;
+  transition: background-color 300ms, color 300ms;
+}
+
+.container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  @apply dark:text-slate-200;
+}
