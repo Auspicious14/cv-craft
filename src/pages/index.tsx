@@ -1,6 +1,8 @@
-import React from "react";
-import PersonalInfoPage from "../modules/personal-info/page";
+import React from 'react';
+import { HomePage } from '../modules/home/page';
 
 export default function Home() {
-  return <></>;
+  return (
+  <HomePage />
+  );
 }

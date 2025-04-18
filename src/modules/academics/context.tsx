@@ -29,7 +29,6 @@ export const AcademyContextProvider = ({
   children: React.ReactNode;
 }) => {
   let cvId: any;
-  console.log({ cvId });
   const router = useRouter();
   const [academics, setAcademics] = useState<IAcademy[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -46,7 +45,7 @@ export const AcademyContextProvider = ({
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [cvId]);
 
   const saveAcademics = useCallback(
     async (payload: IAcademy[], actions: FormikHelpers<any>) => {
@@ -65,7 +64,7 @@ export const AcademyContextProvider = ({
         setIsLoading(false);
       }
     },
-    []
+    [cvId]
   );
 
   return (
