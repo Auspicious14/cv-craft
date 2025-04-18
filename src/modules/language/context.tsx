@@ -12,7 +12,7 @@ import { usePersonalInfo } from "../personal-info/context";
 import { useRouter } from "next/navigation";
 
 export interface ILanguageContext {
-  Languages: ILanguage[];
+  languages: ILanguage[];
   isLoading: boolean;
   saveLanguages: (
     values: ILanguage[],
@@ -31,7 +31,7 @@ export const LanguageContextProvider = ({
   let cvId: string;
   const router = useRouter();
 
-  const [Languages, setLanguages] = useState<ILanguage[]>([]);
+  const [languages, setLanguages] = useState<ILanguage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -68,7 +68,7 @@ export const LanguageContextProvider = ({
 
   return (
     <LanguageContext.Provider
-      value={{ Languages, isLoading, saveLanguages, fetchLanguages }}
+      value={{ languages, isLoading, saveLanguages, fetchLanguages }}
     >
       {children}
     </LanguageContext.Provider>

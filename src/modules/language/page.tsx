@@ -11,14 +11,14 @@ const FormSchema = Yup.object().shape({
 });
 
 export default function LanguagePage() {
-  const { Languages, isLoading, saveLanguages, fetchLanguages } = useLanguage();
+  const { languages, isLoading, saveLanguages, fetchLanguages } = useLanguage();
 
   return (
     <div className="max-w-2xl mx-auto p-4">
       <h1 className="text-2xl font-bold mb-6">Languages </h1>
       <Formik
         initialValues={{
-          entries: Languages?.length > 0 ? Languages : [{ name: "" }],
+          entries: languages?.length > 0 ? languages : [{ name: "" }],
         }}
         // validationSchema={FormSchema}
         onSubmit={async (values, actions) => {
