@@ -2,6 +2,8 @@ import React, { createContext, useCallback, useContext, useState } from "react";
 import { FormikHelpers } from "formik";
 import { IExperience } from "./model";
 import { AxiosClient } from "../../components";
+import { usePersonalInfo } from "../personal-info/context";
+import { useRouter } from "next/navigation";
 
 export interface IExperienceContext {
   experiences: IExperience[];
@@ -25,13 +27,15 @@ export const ExperienceContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const router = useRouter();
+  const { cvId } = usePersonalInfo();
   const [experiences, setExperiences] = useState<IExperience[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchExperiences = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await AxiosClient.get("/experience");
+      const response = await AxiosClient.get(`/cv/${cvId}/experience`);
       setExperiences(response.data);
     } finally {
       setIsLoading(false);
@@ -39,11 +43,17 @@ export const ExperienceContextProvider = ({
   }, []);
 
   const saveExperience = useCallback(
-    async (values: IExperience[], actions: FormikHelpers<any>) => {
+    async (payload: IExperience[], actions: FormikHelpers<any>) => {
       setIsLoading(true);
       try {
-        const response = await AxiosClient.post("/experience", values);
-        setExperiences(response.data);
+        const response = await AxiosClient.put(
+          `/cv/${cvId}/experience`,
+          payload
+        );
+        if (response?.data) {
+          setExperiences(response.data);
+          router.push(`/certificates`);
+        }
         actions.setSubmitting(false);
       } finally {
         setIsLoading(false);

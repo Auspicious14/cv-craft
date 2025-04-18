@@ -2,6 +2,7 @@ import React, { createContext, useCallback, useContext, useState } from "react";
 import { FormikHelpers } from "formik";
 import { AxiosClient } from "../../components";
 import { ISkill } from "./model";
+import { usePersonalInfo } from "../personal-info/context";
 
 export interface ISkillContext {
   skills: ISkill[];
@@ -22,13 +23,15 @@ export const SkillContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const { cvId } = usePersonalInfo();
+
   const [skills, setSkills] = useState<ISkill[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchSkills = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await AxiosClient.get("/skills");
+      const response = await AxiosClient.get(`/cv/${cvId}/skill`);
       setSkills(response.data);
     } finally {
       setIsLoading(false);
@@ -36,10 +39,10 @@ export const SkillContextProvider = ({
   }, []);
 
   const saveSkills = useCallback(
-    async (values: ISkill[], actions: FormikHelpers<any>) => {
+    async (payload: ISkill[], actions: FormikHelpers<any>) => {
       setIsLoading(true);
       try {
-        const response = await AxiosClient.post("/skills", values);
+        const response = await AxiosClient.put(`/cv/${cvId}/skill`, payload);
         setSkills(response.data);
         actions.setSubmitting(false);
       } finally {

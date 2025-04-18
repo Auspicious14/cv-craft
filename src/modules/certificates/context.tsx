@@ -2,6 +2,8 @@ import React, { createContext, useCallback, useContext, useState } from "react";
 import { ICertificate } from "./model";
 import { FormikHelpers } from "formik";
 import { AxiosClient } from "../../components";
+import { usePersonalInfo } from "../personal-info/context";
+import { useRouter } from "next/navigation";
 
 interface ICertificateState {
   isLoading: boolean;
@@ -28,20 +30,25 @@ interface IProps {
 }
 
 export const CertificateContextProvider: React.FC<IProps> = ({ children }) => {
-	const [cvId] = usePersonalInfo()
+  const router = useRouter();
+  const { cvId } = usePersonalInfo();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [certificates, setCertificates] = useState<ICertificate[]>([]);
 
   const saveCertificates = useCallback(
-    async (values: ICertificate[], actions: FormikHelpers<any>) => {
+    async (payload: ICertificate[], actions: FormikHelpers<any>) => {
       setIsLoading(true);
       try {
-        const response = await AxiosClient.put(`/cv/${cvId}/academics`, values);
-				if (response?.data) {
-     setCertificates(response.data);
-     actions.setSubmitting(false);
-}
-        
+        const response = await AxiosClient.put(
+          `/cv/${cvId}/certificate`,
+          payload
+        );
+        if (response?.data) {
+          setCertificates(response.data);
+          router.push(`/skills`);
+
+          actions.setSubmitting(false);
+        }
       } finally {
         setIsLoading(false);
       }

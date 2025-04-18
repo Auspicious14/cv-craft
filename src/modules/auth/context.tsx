@@ -2,6 +2,7 @@ import React, { createContext, useCallback, useContext, useState } from "react";
 import { FormikHelpers } from "formik";
 import { AxiosClient } from "../../components";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export interface AuthContextType {
   user: any;
@@ -26,17 +27,25 @@ export const AuthContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleAuthRequest = async (url: string, values: any) => {
+  const handleAuthRequest = async (
+    url: string,
+    values: any,
+    type: "signup" | "login"
+  ) => {
     setIsLoading(true);
     setError(null);
     try {
       const response = await AxiosClient.post(url, values);
-      setUser(response.data);
-      toast.success("Success!");
+      if (response?.data) {
+        setUser(response.data);
+        toast.success("Success!");
+        router.push(`/${type}`);
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || "An error occurred");
       toast.error(err.response?.data?.message || "Authentication failed");
@@ -47,7 +56,7 @@ export const AuthContextProvider = ({
 
   const signUp = useCallback(
     async (values: any, actions: FormikHelpers<any>) => {
-      await handleAuthRequest("/auth/signup", values);
+      await handleAuthRequest("/auth/signup", values, "signup");
       actions.setSubmitting(false);
     },
     []
@@ -55,7 +64,7 @@ export const AuthContextProvider = ({
 
   const signIn = useCallback(
     async (values: any, actions: FormikHelpers<any>) => {
-      await handleAuthRequest("/auth/signin", values);
+      await handleAuthRequest("/auth/signin", values, "login");
       actions.setSubmitting(false);
     },
     []

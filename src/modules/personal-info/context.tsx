@@ -2,6 +2,8 @@ import React, { createContext, useCallback, useContext, useState } from "react";
 import { FormikHelpers } from "formik";
 import { AxiosClient } from "../../components";
 import { IPersonalInfo } from "./model";
+import { Router } from "next/router";
+import { useRouter } from "next/navigation";
 
 export interface IPersonalInfoContext {
   cvId: string;
@@ -14,21 +16,24 @@ export interface IPersonalInfoContext {
   fetchPersonalInfo: () => Promise<void>;
 }
 
-const PersonalInfoContext = createContext<IPersonalInfoContext | undefined>(undefined);
+const PersonalInfoContext = createContext<IPersonalInfoContext | undefined>(
+  undefined
+);
 
 export const PersonalInfoContextProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  const [cvId, setCvId] = useState<string>()
+  const router = useRouter();
+  const [cvId, setCvId] = useState<string>();
   const [personalInfo, setPersonalInfo] = useState<IPersonalInfo | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchPersonalInfo = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await AxiosClient.get("/personal");
+      const response = await AxiosClient.get(`/cv/${cvId}/personal`);
       setPersonalInfo(response.data);
     } finally {
       setIsLoading(false);
@@ -41,13 +46,11 @@ export const PersonalInfoContextProvider = ({
       try {
         const response = await AxiosClient.post("/cv/personal", values);
         if (response?.data) {
- setCvId(response.data._id)
+          setCvId(response.data._id);
           setPersonalInfo(response.data?.personalInformation);
-        
-}
-actions.setSubmitting(false);
-
-        
+          router.push(`/academics`);
+        }
+        actions.setSubmitting(false);
       } finally {
         setIsLoading(false);
       }
@@ -57,7 +60,13 @@ actions.setSubmitting(false);
 
   return (
     <PersonalInfoContext.Provider
-      value={{ cvId, personalInfo, isLoading, savePersonalInfo, fetchPersonalInfo }}
+      value={{
+        cvId,
+        personalInfo,
+        isLoading,
+        savePersonalInfo,
+        fetchPersonalInfo,
+      }}
     >
       {children}
     </PersonalInfoContext.Provider>
