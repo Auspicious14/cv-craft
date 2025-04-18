@@ -28,6 +28,7 @@ interface IProps {
 }
 
 export const CertificateContextProvider: React.FC<IProps> = ({ children }) => {
+	const [cvId] = usePersonalInfo()
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [certificates, setCertificates] = useState<ICertificate[]>([]);
 
@@ -35,9 +36,12 @@ export const CertificateContextProvider: React.FC<IProps> = ({ children }) => {
     async (values: ICertificate[], actions: FormikHelpers<any>) => {
       setIsLoading(true);
       try {
-        const response = await AxiosClient.post("/academics", values);
-        setCertificates(response.data);
-        actions.setSubmitting(false);
+        const response = await AxiosClient.put(`/cv/${cvId}/academics`, values);
+				if (response?.data) {
+     setCertificates(response.data);
+     actions.setSubmitting(false);
+}
+        
       } finally {
         setIsLoading(false);
       }
