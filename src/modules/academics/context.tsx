@@ -13,25 +13,21 @@ export interface IAcademyContext {
   fetchAcademics: () => Promise<void>;
 }
 
-const AcademyContext = createContext<IAcademyContext>({
-  academics: [],
-  isLoading: false,
-  saveAcademics: async () => {},
-  fetchAcademics: async () => {},
-});
+const AcademyContext = createContext<IAcademyContext | undefined>(undefined);
 
 export const AcademyContextProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
+  const {cvId} = usePersonalInfo()
   const [academics, setAcademics] = useState<IAcademy[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchAcademics = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await AxiosClient.get("/academics");
+      const response = await AxiosClient.get(`/cv/${cvId}/academics`);
       setAcademics(response.data);
     } finally {
       setIsLoading(false);
@@ -42,7 +38,7 @@ export const AcademyContextProvider = ({
     async (values: IAcademy[], actions: FormikHelpers<any>) => {
       setIsLoading(true);
       try {
-        const response = await AxiosClient.post("/academics", values);
+        const response = await AxiosClient.put(`/cv/${cvId}/academics`, values);
         setAcademics(response.data);
         actions.setSubmitting(false);
       } finally {
