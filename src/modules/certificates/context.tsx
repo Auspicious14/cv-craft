@@ -1,4 +1,10 @@
-import React, { createContext, useCallback, useContext, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { ICertificate } from "./model";
 import { FormikHelpers } from "formik";
 import { AxiosClient } from "../../components";
@@ -30,10 +36,14 @@ interface IProps {
 }
 
 export const CertificateContextProvider: React.FC<IProps> = ({ children }) => {
+  let cvId: string;
   const router = useRouter();
-  const { cvId } = usePersonalInfo();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [certificates, setCertificates] = useState<ICertificate[]>([]);
+
+  useEffect(() => {
+    cvId = localStorage.getItem("cvId");
+  }, []);
 
   const saveCertificates = useCallback(
     async (payload: ICertificate[], actions: FormikHelpers<any>) => {
@@ -43,17 +53,17 @@ export const CertificateContextProvider: React.FC<IProps> = ({ children }) => {
           `/cv/${cvId}/certificate`,
           payload
         );
-        if (response?.data) {
-          setCertificates(response.data);
-          router.push(`/skills`);
-
+        const data = response?.data?.data;
+        if (data) {
+          setCertificates(data);
           actions.setSubmitting(false);
+          router.push(`/skills`);
         }
       } finally {
         setIsLoading(false);
       }
     },
-    []
+    [cvId]
   );
 
   return (

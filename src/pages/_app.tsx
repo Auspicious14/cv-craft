@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/global.css";
 import { AppProps } from "next/app";
-import { AppContextProvider } from "../context/app-context";
+import { AppContextProvider } from "../context/context";
 import Layout, { ThemeProvider } from "../components/Layout";
 
 export default function MyApp({ Component, pageProps }: AppProps) {

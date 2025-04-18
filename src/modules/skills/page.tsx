@@ -4,6 +4,11 @@ import { useSkill } from "./context";
 import { TextInput, Button } from "../../components";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { ISkill } from "./model";
+import * as Yup from "yup";
+
+const FormSchema = Yup.object().shape({
+  name: Yup.string().required("Skill is required"),
+});
 
 export default function SkillsPage() {
   const { skills, isLoading, saveSkills, fetchSkills } = useSkill();
@@ -15,6 +20,7 @@ export default function SkillsPage() {
         initialValues={{
           entries: skills?.length > 0 ? skills : [{ name: "" }],
         }}
+        // validationSchema={FormSchema}
         onSubmit={async (values, actions) => {
           await saveSkills(values.entries as ISkill[], actions);
           await fetchSkills();
@@ -39,7 +45,7 @@ export default function SkillsPage() {
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <Field
-                          name={`entries.${index}.skillName`}
+                          name={`entries.${index}.name`}
                           as={TextInput}
                           label="Skill Name"
                           required
@@ -51,8 +57,7 @@ export default function SkillsPage() {
                     type="button"
                     onClick={() =>
                       push({
-                        skillName: "",
-                        proficiencyLevel: "",
+                        name: "",
                       })
                     }
                   >

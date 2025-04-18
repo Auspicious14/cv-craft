@@ -1,7 +1,7 @@
 import React from "react";
 import { Formik, FieldArray, Field } from "formik";
 import { useExperience } from "./context";
-import { TextInput, Button } from "../../components";
+import { TextInput, Button, AIEnhanceButton } from "../../components";
 import { TrashIcon } from "@heroicons/react/24/outline";
 
 export default function ExperiencePage() {
@@ -16,14 +16,23 @@ export default function ExperiencePage() {
           entries:
             experiences?.length > 0
               ? experiences
-              : [{ company: "", description: "", jobTitle: "", location: "" }],
+              : [
+                  {
+                    company: "",
+                    description: "",
+                    jobTitle: "",
+                    location: "",
+                    fromDate: "",
+                    toDate: "",
+                  },
+                ],
         }}
         onSubmit={async (values, actions) => {
           await saveExperience(values.entries, actions);
           await fetchExperiences();
         }}
       >
-        {({ handleSubmit, isSubmitting, values }) => (
+        {({ handleSubmit, isSubmitting, values, setFieldValue }) => (
           <form onSubmit={handleSubmit} className="space-y-4">
             <FieldArray name="entries">
               {({ push, remove }) => (
@@ -42,37 +51,52 @@ export default function ExperiencePage() {
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <Field
-                          name={`entries.${index}.companyName`}
+                          name={`entries.${index}.company`}
                           as={TextInput}
                           label="Company Name"
                           required
                         />
                         <Field
-                          name={`entries.${index}.position`}
+                          name={`entries.${index}.jobTitle`}
                           as={TextInput}
                           label="Position"
                           required
                         />
                         <Field
-                          name={`entries.${index}.startDate`}
+                          name={`entries.${index}.location`}
+                          as={TextInput}
+                          label="Location"
+                          required
+                        />
+                        <Field
+                          name={`entries.${index}.fromDate`}
                           as={TextInput}
                           type="date"
                           label="Start Date"
                           required
                         />
                         <Field
-                          name={`entries.${index}.endDate`}
+                          name={`entries.${index}.toDate`}
                           as={TextInput}
                           type="date"
                           label="End Date"
                           required
                         />
-                        <Field
-                          name={`entries.${index}.responsibilities`}
-                          as={TextInput}
-                          label="Responsibilities"
-                          textarea
-                        />
+                        <div>
+                          <Field
+                            name={`entries.${index}.description`}
+                            as={TextInput}
+                            label="Responsibilities"
+                            textarea
+                          />
+                          <AIEnhanceButton
+                            content=""
+                            section="experience"
+                            onEnhanced={(enhanced) =>
+                              setFieldValue("description", enhanced)
+                            }
+                          />
+                        </div>
                       </div>
                     </div>
                   ))}

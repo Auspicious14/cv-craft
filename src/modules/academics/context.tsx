@@ -1,4 +1,10 @@
-import React, { createContext, useCallback, useContext, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { FormikHelpers } from "formik";
 import { AxiosClient } from "../../components";
 import { IAcademy } from "./model";
@@ -22,13 +28,18 @@ export const AcademyContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  let cvId: any;
+  console.log({ cvId });
   const router = useRouter();
-  const { cvId } = usePersonalInfo();
   const [academics, setAcademics] = useState<IAcademy[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    cvId = localStorage.getItem("cvId");
+  }, []);
   const fetchAcademics = useCallback(async () => {
     setIsLoading(true);
+    console.log("cv id", cvId);
     try {
       const response = await AxiosClient.get(`/cv/${cvId}/academic`);
       setAcademics(response.data);
@@ -40,6 +51,8 @@ export const AcademyContextProvider = ({
   const saveAcademics = useCallback(
     async (payload: IAcademy[], actions: FormikHelpers<any>) => {
       setIsLoading(true);
+      console.log("cv id", cvId);
+
       try {
         const response = await AxiosClient.put(`/cv/${cvId}/academic`, payload);
         if (response?.data) {

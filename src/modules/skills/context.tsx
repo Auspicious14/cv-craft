@@ -1,8 +1,15 @@
-import React, { createContext, useCallback, useContext, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { FormikHelpers } from "formik";
 import { AxiosClient } from "../../components";
 import { ISkill } from "./model";
 import { usePersonalInfo } from "../personal-info/context";
+import { useRouter } from "next/navigation";
 
 export interface ISkillContext {
   skills: ISkill[];
@@ -23,10 +30,14 @@ export const SkillContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { cvId } = usePersonalInfo();
-
+  let cvId: string;
+  const router = useRouter();
   const [skills, setSkills] = useState<ISkill[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    cvId = localStorage.getItem("cvId");
+  }, []);
 
   const fetchSkills = useCallback(async () => {
     setIsLoading(true);
@@ -36,20 +47,24 @@ export const SkillContextProvider = ({
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [cvId]);
 
   const saveSkills = useCallback(
     async (payload: ISkill[], actions: FormikHelpers<any>) => {
       setIsLoading(true);
       try {
         const response = await AxiosClient.put(`/cv/${cvId}/skill`, payload);
-        setSkills(response.data);
-        actions.setSubmitting(false);
+        const data = response?.data?.data;
+        if (data) {
+          setSkills(response.data);
+          actions.setSubmitting(false);
+          router.push("/language");
+        }
       } finally {
         setIsLoading(false);
       }
     },
-    []
+    [cvId]
   );
 
   return (

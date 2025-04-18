@@ -16,7 +16,15 @@ export default function AcademicsPage() {
           entries:
             academics.length > 0
               ? academics
-              : [{ institution: "", degree: "", startDate: "", endDate: "" }],
+              : [
+                  {
+                    institution: "",
+                    degree: "",
+                    course: "",
+                    fromDate: "",
+                    toDate: "",
+                  },
+                ],
         }}
         onSubmit={async (values, actions) => {
           await saveAcademics(values.entries as IAcademy[], actions);
@@ -54,14 +62,20 @@ export default function AcademicsPage() {
                           required
                         />
                         <Field
-                          name={`entries.${index}.startDate`}
+                          name={`entries.${index}.course`}
+                          as={TextInput}
+                          label="Course"
+                          required
+                        />
+                        <Field
+                          name={`entries.${index}.fromDate`}
                           as={TextInput}
                           type="date"
                           label="Start Date"
                           required
                         />
                         <Field
-                          name={`entries.${index}.endDate`}
+                          name={`entries.${index}.toDate`}
                           as={TextInput}
                           type="date"
                           label="End Date"

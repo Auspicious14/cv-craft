@@ -45,9 +45,12 @@ export const PersonalInfoContextProvider = ({
       setIsLoading(true);
       try {
         const response = await AxiosClient.post("/cv/personal", values);
-        if (response?.data) {
-          setCvId(response.data._id);
-          setPersonalInfo(response.data?.personalInformation);
+        const data = response.data?.data;
+        if (data) {
+          console.log({ data });
+          // setCvId(response.data._id);
+          setPersonalInfo(data?.personalInformation);
+          localStorage.setItem("cvId", data?._id);
           router.push(`/academics`);
         }
         actions.setSubmitting(false);

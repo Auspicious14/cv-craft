@@ -15,7 +15,7 @@ export default function CertificatesPage() {
           entries:
             certificates?.length > 0
               ? certificates
-              : [{ description: "", name: "", year: "", school: "" }],
+              : [{ name: "", year: "", institution: "" }],
         }}
         onSubmit={async (values, actions) => {
           await saveCertificates(values.entries, actions);
@@ -40,19 +40,19 @@ export default function CertificatesPage() {
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <Field
-                          name={`entries.${index}.certificateName`}
+                          name={`entries.${index}.name`}
                           as={TextInput}
                           label="Certificate Name"
                           required
                         />
                         <Field
-                          name={`entries.${index}.issuingOrganization`}
+                          name={`entries.${index}.institution`}
                           as={TextInput}
                           label="Issuing Organization"
                           required
                         />
                         <Field
-                          name={`entries.${index}.dateObtained`}
+                          name={`entries.${index}.year`}
                           as={TextInput}
                           type="date"
                           label="Date Obtained"

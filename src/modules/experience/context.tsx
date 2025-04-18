@@ -1,4 +1,10 @@
-import React, { createContext, useCallback, useContext, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { FormikHelpers } from "formik";
 import { IExperience } from "./model";
 import { AxiosClient } from "../../components";
@@ -28,9 +34,13 @@ export const ExperienceContextProvider = ({
   children: React.ReactNode;
 }) => {
   const router = useRouter();
-  const { cvId } = usePersonalInfo();
+  let cvId: string;
   const [experiences, setExperiences] = useState<IExperience[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    cvId = localStorage.getItem("cvId");
+  }, []);
 
   const fetchExperiences = useCallback(async () => {
     setIsLoading(true);
@@ -50,8 +60,10 @@ export const ExperienceContextProvider = ({
           `/cv/${cvId}/experience`,
           payload
         );
-        if (response?.data) {
-          setExperiences(response.data);
+        const data = response?.data?.data;
+        console.log({ data });
+        if (data) {
+          setExperiences(data);
           router.push(`/certificates`);
         }
         actions.setSubmitting(false);
