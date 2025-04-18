@@ -4,6 +4,7 @@ import { AxiosClient } from "../../components";
 import { IPersonalInfo } from "./model";
 
 export interface IPersonalInfoContext {
+  cvId: string;
   personalInfo: IPersonalInfo | null;
   isLoading: boolean;
   savePersonalInfo: (
@@ -13,18 +14,14 @@ export interface IPersonalInfoContext {
   fetchPersonalInfo: () => Promise<void>;
 }
 
-const PersonalInfoContext = createContext<IPersonalInfoContext>({
-  personalInfo: null,
-  isLoading: false,
-  savePersonalInfo: async () => {},
-  fetchPersonalInfo: async () => {},
-});
+const PersonalInfoContext = createContext<IPersonalInfoContext | undefined>(undefined);
 
 export const PersonalInfoContextProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
+  const [cvId, setCvId] = useState<string>()
   const [personalInfo, setPersonalInfo] = useState<IPersonalInfo | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -43,8 +40,14 @@ export const PersonalInfoContextProvider = ({
       setIsLoading(true);
       try {
         const response = await AxiosClient.post("/cv/personal", values);
-        setPersonalInfo(response.data);
-        actions.setSubmitting(false);
+        if (response?.data) {
+ setCvId(response.data._id)
+          setPersonalInfo(response.data?.personalInformation);
+        
+}
+actions.setSubmitting(false);
+
+        
       } finally {
         setIsLoading(false);
       }
@@ -54,7 +57,7 @@ export const PersonalInfoContextProvider = ({
 
   return (
     <PersonalInfoContext.Provider
-      value={{ personalInfo, isLoading, savePersonalInfo, fetchPersonalInfo }}
+      value={{ cvId, personalInfo, isLoading, savePersonalInfo, fetchPersonalInfo }}
     >
       {children}
     </PersonalInfoContext.Provider>
