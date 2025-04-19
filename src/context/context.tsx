@@ -8,6 +8,7 @@ import { AcademyContextProvider } from "../modules/academics/context";
 import { SkillContextProvider } from "../modules/skills/context";
 import { AiSuggestionContextProvider } from "./suggestion";
 import { LanguageContextProvider } from "../modules/language/context";
+import { ExportPdfContextProvider } from "../modules/export-pdf/context";
 
 export const combineContext = (...components: FC[]): FC<any> => {
   const CombinedComponent = components.reduce(
@@ -57,5 +58,6 @@ const providers = [
   SkillContextProvider,
   AiSuggestionContextProvider,
   LanguageContextProvider,
+  ExportPdfContextProvider,
 ] as any;
 export const AppContextProvider = combineContext(...providers);
