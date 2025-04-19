@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "../../components";
+import Link from "next/link"
 
 export const HomePage = () => {
   return (
@@ -13,9 +14,12 @@ export const HomePage = () => {
             Create professional resumes in minutes with our intuitive builder
           </p>
           <div className="flex justify-center gap-4">
+            <Link href="/personal">
             <Button variant="primary" className="px-8 py-3 text-lg">
               Get Started
             </Button>
+            </Link>
+            
           </div>
         </div>
       </section>
