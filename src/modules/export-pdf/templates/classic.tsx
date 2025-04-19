@@ -1,3 +1,4 @@
+import { IPersonalInfo } from "../../personal-info/model";
 import { ICV } from "../model";
 
 interface IProps {
@@ -6,13 +7,13 @@ interface IProps {
 
 export const ClassicTemplate: React.FC<IProps> = ({ cv }) => {
   const {
-    personalInformation,
-    academic,
-    experience,
-    skills,
-    certificates,
-    languages,
-  } = cv;
+    personalInformation = {} as IPersonalInfo,
+    academic = [] as ICV["academic"],
+    experience = [] as ICV["experience"],
+    skill = [] as ICV["skill"],
+    certificate = [] as ICV["certificate"],
+    language = [] as ICV["language"],
+  } = cv || {};
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -76,10 +77,10 @@ export const ClassicTemplate: React.FC<IProps> = ({ cv }) => {
 
       <section className="mb-6">
         <h2 className="text-xl font-semibold border-b border-gray-700 mb-2">
-          Technical Skills
+          Technical skill
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mt-3">
-          {skills.map((skill, i) => (
+          {skill.map((skill, i) => (
             <div
               key={i}
               className="bg-gray-100 text-center py-2 px-3 rounded shadow-sm text-sm font-medium"
@@ -94,7 +95,7 @@ export const ClassicTemplate: React.FC<IProps> = ({ cv }) => {
         <h2 className="text-xl font-semibold border-b border-gray-700 mb-2">
           Certifications
         </h2>
-        {certificates.map((cert, i) => (
+        {certificate.map((cert, i) => (
           <div key={i} className="mb-3">
             <h3 className="text-lg font-bold">{cert.name}</h3>
             <p className="font-medium">
@@ -104,13 +105,13 @@ export const ClassicTemplate: React.FC<IProps> = ({ cv }) => {
         ))}
       </section>
 
-      {/* Languages */}
+      {/* language */}
       <section className="mb-6">
         <h2 className="text-xl font-semibold border-b border-gray-700 mb-2">
-          Languages
+          language
         </h2>
         <ul className="list-disc list-inside">
-          {languages.map((lang, i) => (
+          {language.map((lang, i) => (
             <li key={i} className="text-sm">
               {lang.name}
             </li>

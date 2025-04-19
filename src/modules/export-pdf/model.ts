@@ -9,7 +9,7 @@ export interface ICV {
   personalInformation: IPersonalInfo;
   academic: IAcademy[];
   experience: IExperience[];
-  skills: ISkill[];
-  certificates: ICertificate[];
-  languages: ILanguage[];
+  skill: ISkill[];
+  certificate: ICertificate[];
+  language: ILanguage[];
 }

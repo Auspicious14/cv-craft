@@ -1,17 +1,18 @@
+import React from "react";
 import { ICV } from "../model";
-
+import { IPersonalInfo } from "../../personal-info/model";
 interface IProps {
   cv: ICV;
 }
 export const ModernTemplate: React.FC<IProps> = ({ cv }) => {
   const {
-    personalInformation,
-    academic,
-    experience,
-    skills,
-    certificates,
-    languages,
-  } = cv;
+    personalInformation = {} as IPersonalInfo,
+    academic = [] as ICV["academic"],
+    experience = [] as ICV["experience"],
+    skill = [] as ICV["skill"],
+    certificate = [] as ICV["certificate"],
+    language = [] as ICV["language"],
+  } = cv || {};
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     return date.toLocaleString("default", { month: "short", year: "numeric" });
@@ -80,7 +81,7 @@ export const ModernTemplate: React.FC<IProps> = ({ cv }) => {
         <h2 className="text-xl font-semibold text-gray-800 border-b-2 border-blue-500 pb-2 mb-4">
           Certifications
         </h2>
-        {certificates.map((cert, index) => (
+        {certificate.map((cert, index) => (
           <article key={index} className="mb-4">
             <h3 className="text-lg font-bold">{cert.name}</h3>
             <p className="font-medium">
@@ -92,10 +93,10 @@ export const ModernTemplate: React.FC<IProps> = ({ cv }) => {
 
       <section className="mb-8">
         <h2 className="text-xl font-semibold text-gray-800 border-b-2 border-blue-500 pb-2 mb-4">
-          Skills
+          skill
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {skills.map((skill, index) => (
+          {skill.map((skill, index) => (
             <div
               key={index}
               className="bg-gray-100 px-4 py-2 rounded text-center text-sm font-medium shadow-sm"
@@ -108,10 +109,10 @@ export const ModernTemplate: React.FC<IProps> = ({ cv }) => {
 
       <section className="mb-8">
         <h2 className="text-xl font-semibold text-gray-800 border-b-2 border-blue-500 pb-2 mb-4">
-          Languages
+          language
         </h2>
         <ul className="list-disc list-inside text-sm">
-          {languages.map((lang, index) => (
+          {language.map((lang, index) => (
             <li key={index}>
               <strong>{lang.name}</strong>
             </li>

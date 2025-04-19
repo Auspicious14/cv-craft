@@ -3,6 +3,7 @@ import { Formik, FieldArray, Field } from "formik";
 import { useExperience } from "./context";
 import { TextInput, Button, AIEnhanceButton } from "../../components";
 import { TrashIcon } from "@heroicons/react/24/outline";
+import { DatePicker } from "../../components/Inputs/DatePicker";
 
 export default function ExperiencePage() {
   const { experiences, isLoading, saveExperience, fetchExperiences } =
@@ -68,17 +69,13 @@ export default function ExperiencePage() {
                           label="Location"
                           required
                         />
-                        <Field
+                        <DatePicker
                           name={`entries.${index}.fromDate`}
-                          as={TextInput}
-                          type="date"
                           label="Start Date"
                           required
                         />
-                        <Field
+                        <DatePicker
                           name={`entries.${index}.toDate`}
-                          as={TextInput}
-                          type="date"
                           label="End Date"
                           required
                         />

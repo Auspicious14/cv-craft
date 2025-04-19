@@ -4,6 +4,7 @@ import { useAcademy } from "./context";
 import { TextInput, Button } from "../../components";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { IAcademy } from "./model";
+import { DatePicker } from "../../components/Inputs/DatePicker";
 
 export default function AcademicsPage() {
   const { academics, isLoading, saveAcademics, fetchAcademics } = useAcademy();
@@ -67,17 +68,13 @@ export default function AcademicsPage() {
                           label="Course"
                           required
                         />
-                        <Field
+                        <DatePicker
                           name={`entries.${index}.fromDate`}
-                          as={TextInput}
-                          type="date"
                           label="Start Date"
                           required
                         />
-                        <Field
+                        <DatePicker
                           name={`entries.${index}.toDate`}
-                          as={TextInput}
-                          type="date"
                           label="End Date"
                           required
                         />

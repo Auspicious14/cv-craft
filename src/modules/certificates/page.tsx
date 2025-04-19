@@ -3,6 +3,7 @@ import { Formik, FieldArray, Field } from "formik";
 import { TextInput, Button } from "../../components";
 import { useCertificateState } from "./context";
 import { TrashIcon } from "@heroicons/react/24/outline";
+import { DatePicker } from "../../components/Inputs/DatePicker";
 
 export default function CertificatesPage() {
   const { certificates, isLoading, saveCertificates } = useCertificateState();
@@ -51,10 +52,8 @@ export default function CertificatesPage() {
                           label="Issuing Organization"
                           required
                         />
-                        <Field
+                        <DatePicker
                           name={`entries.${index}.year`}
-                          as={TextInput}
-                          type="date"
                           label="Date Obtained"
                           required
                         />

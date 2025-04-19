@@ -3,42 +3,21 @@ import { useExportPdf } from "./context";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { ClassicTemplate } from "./templates/classic";
 import { ModernTemplate } from "./templates/modern";
+import { Button } from "../../components";
 
 export const PreviewPage = () => {
-  const { getCV, cv } = useExportPdf();
+  const { getCV, cv, isLoading, saveExportPdf } = useExportPdf();
   const [selectedTemplate, setSelectedTemplate] = useState("modern");
   const [fileName, setFileName] = useState("my-cv");
 
   useEffect(() => {
     getCV();
-  }, [getCV]);
+  }, []);
 
   const handleGeneratePdf = async () => {
-    try {
-      const response = await fetch("/api/generate-pdf", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          template: selectedTemplate,
-          fileName,
-          cvData: cv,
-        }),
-      });
-
-      const blob = await response.blob();
-      const downloadUrl = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = downloadUrl;
-      a.download = `${fileName}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(downloadUrl);
-      document.body.removeChild(a);
-    } catch (error) {
-      console.error("PDF generation failed:", error);
-      alert("PDF generation failed. Please try again.");
-    }
+    await saveExportPdf(selectedTemplate);
   };
+  console.log({ cv });
 
   return (
     <div className="p-4 bg-white rounded-lg shadow-md">
@@ -51,8 +30,8 @@ export const PreviewPage = () => {
           value={selectedTemplate}
           onChange={(e) => setSelectedTemplate(e.target.value)}
         >
-          <option value="default">Default ATS Template</option>
           <option value="modern">Modern Professional Template</option>
+          <option value="classic">Classic Professional Template</option>
         </select>
       </div>
 
@@ -78,13 +57,14 @@ export const PreviewPage = () => {
         )}
       </div>
 
-      <button
+      <Button
         className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
         onClick={handleGeneratePdf}
-        disabled={!cv}
+        disabled={isLoading}
+        isLoading={isLoading}
       >
         Generate PDF
-      </button>
+      </Button>
     </div>
   );
 };
