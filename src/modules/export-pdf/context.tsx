@@ -6,7 +6,6 @@ import React, {
   useState,
 } from "react";
 import { AxiosClient } from "../../components";
-import { FormikHelpers } from "formik";
 import { ICV } from "./model";
 
 export interface IExportPdfContext {
@@ -48,13 +47,28 @@ export const ExportPdfContextProvider = ({
         }
       );
 
-      const data = response.data?.data;
-      console.log({ data });
+      const contentDisposition = response.headers["content-disposition"];
+      console.log("PDF generation response:", {
+        status: response.status,
+        headers: response.headers,
+        data: response.data,
+      });
+      const fileNameMatch = contentDisposition.match(
+        /filename=['"]?([^'"]+)['"]?/
+      );
+      const fileName = fileNameMatch
+        ? decodeURIComponent(fileNameMatch[1].trim())
+        : "cv.pdf";
+
       // Create download link for PDF
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const url = window.URL.createObjectURL(
+        new Blob([response.data], { type: "application/pdf" })
+      );
+      window.open(url);
+
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `${data.fileName || "cv"}.pdf`);
+      link.setAttribute("download", fileName);
       document.body.appendChild(link);
       link.click();
       link.parentNode?.removeChild(link);

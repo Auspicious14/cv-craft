@@ -19,7 +19,7 @@ export const ModernTemplate: React.FC<IProps> = ({ cv }) => {
   };
 
   return (
-    <main className="max-w-4xl mx-auto px-6 py-10 font-sans text-gray-800">
+    <main className="max-w-4xl mx-auto px-6 py-10  text-gray-800 dark:text-white">
       <header className="bg-gray-800 text-white text-center py-6 mb-8 rounded">
         <h1 className="text-3xl font-bold">
           {personalInformation.firstName} {personalInformation.lastName}
@@ -29,15 +29,15 @@ export const ModernTemplate: React.FC<IProps> = ({ cv }) => {
         </p>
       </header>
 
-      <section className="mb-8">
-        <h2 className="text-xl font-semibold text-gray-800 border-b-2 border-blue-500 pb-2 mb-2">
+      <section className="mb-8 dark:text-white">
+        <h2 className="text-xl font-semibold dark:text-white text-gray-800 border-b-2 border-blue-500 pb-2 mb-2">
           Professional Summary
         </h2>
         <p>{personalInformation.description}</p>
       </section>
 
       <section className="mb-8">
-        <h2 className="text-xl font-semibold text-gray-800 border-b-2 border-blue-500 pb-2 mb-4">
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-white border-b-2 border-blue-500 pb-2 mb-4">
           Education
         </h2>
         {academic.map((edu, index) => (
@@ -54,7 +54,7 @@ export const ModernTemplate: React.FC<IProps> = ({ cv }) => {
       </section>
 
       <section className="mb-8">
-        <h2 className="text-xl font-semibold text-gray-800 border-b-2 border-blue-500 pb-2 mb-4">
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-white border-b-2 border-blue-500 pb-2 mb-4">
           Professional Experience
         </h2>
         {experience.map((exp, index) => (
@@ -78,28 +78,31 @@ export const ModernTemplate: React.FC<IProps> = ({ cv }) => {
       </section>
 
       <section className="mb-8">
-        <h2 className="text-xl font-semibold text-gray-800 border-b-2 border-blue-500 pb-2 mb-4">
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-white border-b-2 border-blue-500 pb-2 mb-4">
           Certifications
         </h2>
         {certificate.map((cert, index) => (
           <article key={index} className="mb-4">
             <h3 className="text-lg font-bold">{cert.name}</h3>
             <p className="font-medium">
-              {cert.institution} • {formatDate(cert.year)}
+              {cert.institution} •{" "}
+              <span className="text-sm text-gray-600">
+                {formatDate(cert.year)}
+              </span>
             </p>
           </article>
         ))}
       </section>
 
       <section className="mb-8">
-        <h2 className="text-xl font-semibold text-gray-800 border-b-2 border-blue-500 pb-2 mb-4">
-          skill
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-white border-b-2 border-blue-500 pb-2 mb-4">
+          Skill
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {skill.map((skill, index) => (
             <div
               key={index}
-              className="bg-gray-100 px-4 py-2 rounded text-center text-sm font-medium shadow-sm"
+              className="bg-gray-100 dark:text-gray-800 px-4 py-2 rounded text-center text-sm font-medium shadow-sm"
             >
               {skill.name}
             </div>
@@ -108,8 +111,8 @@ export const ModernTemplate: React.FC<IProps> = ({ cv }) => {
       </section>
 
       <section className="mb-8">
-        <h2 className="text-xl font-semibold text-gray-800 border-b-2 border-blue-500 pb-2 mb-4">
-          language
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-white border-b-2 border-blue-500 pb-2 mb-4">
+          Language
         </h2>
         <ul className="list-disc list-inside text-sm">
           {language.map((lang, index) => (

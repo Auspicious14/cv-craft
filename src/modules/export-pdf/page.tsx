@@ -1,70 +1,67 @@
 import React, { useEffect, useState } from "react";
 import { useExportPdf } from "./context";
-import { PDFDownloadLink } from "@react-pdf/renderer";
 import { ClassicTemplate } from "./templates/classic";
 import { ModernTemplate } from "./templates/modern";
 import { Button } from "../../components";
 
 export const PreviewPage = () => {
   const { getCV, cv, isLoading, saveExportPdf } = useExportPdf();
-  const [selectedTemplate, setSelectedTemplate] = useState("modern");
-  const [fileName, setFileName] = useState("my-cv");
+  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
 
   useEffect(() => {
     getCV();
   }, []);
 
   const handleGeneratePdf = async () => {
-    await saveExportPdf(selectedTemplate);
+    await saveExportPdf(selectedTemplate.toLowerCase());
   };
-  console.log({ cv });
+
+  const templates = [
+    {
+      name: "Modern",
+      compnent: <ModernTemplate cv={cv} />,
+    },
+    {
+      name: "Classic",
+      compnent: <ClassicTemplate cv={cv} />,
+    },
+  ];
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow-md">
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Template Style
-        </label>
-        <select
-          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          value={selectedTemplate}
-          onChange={(e) => setSelectedTemplate(e.target.value)}
+    <div className="max-w-7xl mx-auto px-4 py-10">
+      <h1 className="text-3xl font-bold text-center mb-2">
+        Select a Resume Template
+      </h1>
+      {selectedTemplate === null && (
+        <p className="text-center my-6 text-gray-500">
+          Click a template to select and enable download
+        </p>
+      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {templates.map((template, index) => (
+          <div
+            key={index}
+            className={`border rounded-2xl shadow-sm p-4 transition hover:shadow-lg ${
+              selectedTemplate === template.name ? "ring-2 ring-blue-500" : ""
+            }`}
+            onClick={() => setSelectedTemplate(template.name)}
+          >
+            <h2 className="text-xl font-semibold mt-4">{template.name}</h2>
+            {template?.compnent}
+          </div>
+        ))}
+      </div>
+      {selectedTemplate !== null && (
+        <Button
+          isLoading={isLoading}
+          disabled={isLoading}
+          variant="primary"
+          className="flex justify-center items-center my-4"
+          onClick={handleGeneratePdf}
         >
-          <option value="modern">Modern Professional Template</option>
-          <option value="classic">Classic Professional Template</option>
-        </select>
-      </div>
-
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          File Name
-        </label>
-        <input
-          type="text"
-          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          value={fileName}
-          onChange={(e) => setFileName(e.target.value)}
-          placeholder="Enter file name"
-        />
-      </div>
-
-      <div className="mb-4 border rounded-lg p-4 max-h-96 overflow-y-auto">
-        <h3 className="text-lg font-medium mb-2">Template Preview</h3>
-        {selectedTemplate === "modern" ? (
-          <ModernTemplate cv={cv} />
-        ) : (
-          <ClassicTemplate cv={cv} />
-        )}
-      </div>
-
-      <Button
-        className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
-        onClick={handleGeneratePdf}
-        disabled={isLoading}
-        isLoading={isLoading}
-      >
-        Generate PDF
-      </Button>
+          Generate PDF
+        </Button>
+      )}
     </div>
   );
 };

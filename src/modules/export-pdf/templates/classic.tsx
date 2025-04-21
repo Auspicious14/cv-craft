@@ -21,7 +21,7 @@ export const ClassicTemplate: React.FC<IProps> = ({ cv }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 font-serif text-gray-900">
+    <div className="max-w-4xl mx-auto px-4 py-8 text-gray-900 dark:text-white">
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold">
           {personalInformation.firstName} {personalInformation.lastName}
@@ -83,7 +83,7 @@ export const ClassicTemplate: React.FC<IProps> = ({ cv }) => {
           {skill.map((skill, i) => (
             <div
               key={i}
-              className="bg-gray-100 text-center py-2 px-3 rounded shadow-sm text-sm font-medium"
+              className="bg-gray-100 text-center py-2 px-3 rounded shadow-sm text-sm dark:text-gray-600 font-medium"
             >
               {skill.name}
             </div>
@@ -105,10 +105,9 @@ export const ClassicTemplate: React.FC<IProps> = ({ cv }) => {
         ))}
       </section>
 
-      {/* language */}
       <section className="mb-6">
         <h2 className="text-xl font-semibold border-b border-gray-700 mb-2">
-          language
+          Language
         </h2>
         <ul className="list-disc list-inside">
           {language.map((lang, i) => (
