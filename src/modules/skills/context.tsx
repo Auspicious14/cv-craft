@@ -10,6 +10,7 @@ import { AxiosClient } from "../../components";
 import { ISkill } from "./model";
 import { usePersonalInfo } from "../personal-info/context";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export interface ISkillContext {
   skills: ISkill[];
@@ -57,6 +58,7 @@ export const SkillContextProvider = ({
         const data = response?.data?.data;
         if (data) {
           setSkills(response.data);
+          toast.success("Success!");
           actions.setSubmitting(false);
           router.push("/language");
         }

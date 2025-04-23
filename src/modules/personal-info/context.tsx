@@ -4,6 +4,7 @@ import { AxiosClient } from "../../components";
 import { IPersonalInfo } from "./model";
 import { Router } from "next/router";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export interface IPersonalInfoContext {
   cvId: string;
@@ -47,12 +48,15 @@ export const PersonalInfoContextProvider = ({
         const response = await AxiosClient.post("/cv/personal", values);
         const data = response.data?.data;
         if (data) {
-          console.log({ data });
           // setCvId(response.data._id);
           setPersonalInfo(data?.personalInformation);
           localStorage.setItem("cvId", data?._id);
+          toast.success("Success!");
           router.push(`/academics`);
         }
+        actions.setSubmitting(false);
+      } catch (error) {
+        console.log({ error });
         actions.setSubmitting(false);
       } finally {
         setIsLoading(false);

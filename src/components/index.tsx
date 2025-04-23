@@ -3,3 +3,4 @@ export * from "./Layout";
 export * from "./Buttons";
 export * from "./Buttons/suggestion";
 export * from "./Inputs";
+export * from "./Loading";

@@ -10,6 +10,7 @@ import { AxiosClient } from "../../components";
 import { ILanguage } from "./model";
 import { usePersonalInfo } from "../personal-info/context";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export interface ILanguageContext {
   languages: ILanguage[];
@@ -56,8 +57,9 @@ export const LanguageContextProvider = ({
         const data = response?.data?.data;
         if (data) {
           setLanguages(response.data);
+          toast.success("Success!");
           actions.setSubmitting(false);
-          router.push("/language");
+          router.push("/preview");
         }
       } finally {
         setIsLoading(false);

@@ -10,6 +10,7 @@ import { FormikHelpers } from "formik";
 import { AxiosClient } from "../../components";
 import { usePersonalInfo } from "../personal-info/context";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 interface ICertificateState {
   isLoading: boolean;
@@ -56,6 +57,7 @@ export const CertificateContextProvider: React.FC<IProps> = ({ children }) => {
         const data = response?.data?.data;
         if (data) {
           setCertificates(data);
+          toast.success("Success!");
           actions.setSubmitting(false);
           router.push(`/skills`);
         }

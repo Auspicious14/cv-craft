@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useExportPdf } from "./context";
 import { ClassicTemplate } from "./templates/classic";
 import { ModernTemplate } from "./templates/modern";
-import { Button } from "../../components";
+import { Button, TemplateSkeleton } from "../../components";
 
 export const PreviewPage = () => {
   const { getCV, cv, isLoading, saveExportPdf } = useExportPdf();
@@ -19,11 +19,11 @@ export const PreviewPage = () => {
   const templates = [
     {
       name: "Modern",
-      compnent: <ModernTemplate cv={cv} />,
+      compnent: isLoading ? <TemplateSkeleton /> : <ModernTemplate cv={cv} />,
     },
     {
       name: "Classic",
-      compnent: <ClassicTemplate cv={cv} />,
+      compnent: isLoading ? <TemplateSkeleton /> : <ClassicTemplate cv={cv} />,
     },
   ];
 

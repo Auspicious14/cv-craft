@@ -10,6 +10,7 @@ import { AxiosClient } from "../../components";
 import { IAcademy } from "./model";
 import { usePersonalInfo } from "../personal-info/context";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export interface IAcademyContext {
   academics: IAcademy[];
@@ -56,6 +57,7 @@ export const AcademyContextProvider = ({
         const response = await AxiosClient.put(`/cv/${cvId}/academic`, payload);
         if (response?.data) {
           setAcademics(response.data);
+          toast.success("Success!");
           router.push(`/experience`);
 
           actions.setSubmitting(false);

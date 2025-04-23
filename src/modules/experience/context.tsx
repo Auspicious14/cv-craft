@@ -10,6 +10,7 @@ import { IExperience } from "./model";
 import { AxiosClient } from "../../components";
 import { usePersonalInfo } from "../personal-info/context";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export interface IExperienceContext {
   experiences: IExperience[];
@@ -61,12 +62,12 @@ export const ExperienceContextProvider = ({
           payload
         );
         const data = response?.data?.data;
-        console.log({ data });
         if (data) {
           setExperiences(data);
+          toast.success("Success!");
           router.push(`/certificates`);
+          actions.setSubmitting(false);
         }
-        actions.setSubmitting(false);
       } finally {
         setIsLoading(false);
       }
