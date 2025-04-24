@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { AxiosClient } from "../../components";
 import { ICV } from "./model";
+import toast from "react-hot-toast";
 
 export interface IExportPdfContext {
   isLoading: boolean;
@@ -37,10 +38,10 @@ export const ExportPdfContextProvider = ({
 
   const getCV = useCallback(async () => {
     if (!cvId) {
-      console.error('No cvId found in state');
+      console.error("No cvId found in state");
       return;
     }
-    
+
     setIsLoading(true);
     try {
       const response = await AxiosClient.get(`/api/cv/${cvId}`);
@@ -54,54 +55,57 @@ export const ExportPdfContextProvider = ({
   }, [cvId]);
 
   // Add cvId to dependency array
-  const saveExportPdf = useCallback(async (template: string) => {
-    if (!cvId) {
-      console.error('Cannot save PDF - no cvId available');
-      return;
-    }
-    
-    setIsLoading(true);
-    try {
-      const response = await AxiosClient.post(
-        `/cv/generate`,
-        {
-          cvId,
-          template,
-        },
-        {
-          responseType: "blob",
-        }
-      );
+  const saveExportPdf = useCallback(
+    async (template: string) => {
+      if (!cvId) {
+        toast.error("Cannot save PDF: No cv found");
+        return;
+      }
 
-      const contentDisposition = response.headers["content-disposition"];
-      console.log("PDF generation response:", {
-        status: response.status,
-        headers: response.headers,
-        data: response.data,
-      });
-      const fileNameMatch = contentDisposition.match(
-        /filename=['"]?([^'"]+)['"]?/
-      );
-      const fileName = fileNameMatch
-        ? decodeURIComponent(fileNameMatch[1].trim())
-        : "cv.pdf";
+      setIsLoading(true);
+      try {
+        const response = await AxiosClient.post(
+          `/cv/generate`,
+          {
+            cvId,
+            template,
+          },
+          {
+            responseType: "blob",
+          }
+        );
 
-      // Create download link for PDF
-      const url = window.URL.createObjectURL(
-        new Blob([response.data], { type: "application/pdf" })
-      );
-      window.open(url);
+        const contentDisposition = response.headers["content-disposition"];
+        console.log("PDF generation response:", {
+          status: response.status,
+          headers: response.headers,
+          data: response.data,
+        });
+        const fileNameMatch = contentDisposition.match(
+          /filename=['"]?([^'"]+)['"]?/
+        );
+        const fileName = fileNameMatch
+          ? decodeURIComponent(fileNameMatch[1].trim())
+          : "cv.pdf";
 
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", fileName);
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode?.removeChild(link);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [cvId]); // Add cvId as dependency
+        // Create download link for PDF
+        const url = window.URL.createObjectURL(
+          new Blob([response.data], { type: "application/pdf" })
+        );
+        window.open(url);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", fileName);
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode?.removeChild(link);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [cvId]
+  ); // Add cvId as dependency
 
   return (
     <ExportPdfContext.Provider value={{ isLoading, cv, saveExportPdf, getCV }}>

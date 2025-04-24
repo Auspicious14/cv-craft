@@ -12,17 +12,17 @@ export const PreviewPage = () => {
 
   useEffect(() => {
     const storedCvId = localStorage.getItem("cvId");
+    console.log("storedCvId", storedCvId);
     if (!storedCvId) {
       console.error("No CV found in storage");
       router.push("/");
-      return;
     }
 
     if (!cv) {
       getCV();
     }
   }, [getCV, cv]);
-
+  console.log("cv", cv);
   const handleGeneratePdf = async () => {
     await saveExportPdf(selectedTemplate.toLowerCase());
   };
@@ -48,7 +48,7 @@ export const PreviewPage = () => {
           Click a template to select and enable download
         </p>
       )}
-      <p className="text-sm my-2 text-gray-500 text-center italic">
+      <p className="text-sm my-2 text-red-500 text-center italic">
         Note: Resumes created are deleted in the next 24hrs. Download now!
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
