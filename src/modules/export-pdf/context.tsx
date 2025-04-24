@@ -25,15 +25,41 @@ export const ExportPdfContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  let cvId: string;
-  const [isLoading, setIsLoading] = useState(false);
+  // Change initial state from null to undefined to match interface
   const [cv, setCv] = useState<ICV>();
+  const [isLoading, setIsLoading] = useState(false);
+  const [cvId, setCvId] = useState<string | null>(null);
 
   useEffect(() => {
-    cvId = localStorage.getItem("cvId");
+    const storedCvId = localStorage.getItem("cvId");
+    setCvId(storedCvId || null); // Ensure we store null instead of undefined
   }, []);
 
+  const getCV = useCallback(async () => {
+    if (!cvId) {
+      console.error('No cvId found in state');
+      return;
+    }
+    
+    setIsLoading(true);
+    try {
+      const response = await AxiosClient.get(`/api/cv/${cvId}`);
+      setCv(response.data);
+    } catch (error) {
+      console.error("Error fetching CV:", error);
+      setCv(undefined); // Reset CV on error
+    } finally {
+      setIsLoading(false);
+    }
+  }, [cvId]);
+
+  // Add cvId to dependency array
   const saveExportPdf = useCallback(async (template: string) => {
+    if (!cvId) {
+      console.error('Cannot save PDF - no cvId available');
+      return;
+    }
+    
     setIsLoading(true);
     try {
       const response = await AxiosClient.post(
@@ -75,21 +101,7 @@ export const ExportPdfContextProvider = ({
     } finally {
       setIsLoading(false);
     }
-  }, []);
-
-  const getCV = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const response = await AxiosClient.get(`/cv/${cvId}`);
-      const data = response.data?.data;
-      console.log(data);
-      if (data) {
-        setCv(data);
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  }, [cvId]); // Add cvId as dependency
 
   return (
     <ExportPdfContext.Provider value={{ isLoading, cv, saveExportPdf, getCV }}>

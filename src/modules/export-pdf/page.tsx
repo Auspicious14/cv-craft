@@ -9,8 +9,10 @@ export const PreviewPage = () => {
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
 
   useEffect(() => {
-    getCV();
-  }, []);
+    if (!cv) {
+      getCV();
+    }
+  }, [getCV, cv]);
 
   const handleGeneratePdf = async () => {
     await saveExportPdf(selectedTemplate.toLowerCase());
@@ -33,10 +35,13 @@ export const PreviewPage = () => {
         Select a Resume Template
       </h1>
       {selectedTemplate === null && (
-        <p className="text-center my-6 text-gray-500">
+        <p className="text-center my-6 mb-2 text-gray-500">
           Click a template to select and enable download
         </p>
       )}
+      <p className="text-sm my-2 text-gray-500 text-center italic">
+        Note: Resumes created are deleted in the next 24hrs. Download now!
+      </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {templates.map((template, index) => (
           <div
