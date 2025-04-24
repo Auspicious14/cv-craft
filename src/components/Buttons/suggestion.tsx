@@ -25,7 +25,7 @@ export const AIEnhanceButton: React.FC<IProps> = ({
       content,
     });
 
-    onEnhanced(suggestion.enhanced, suggestion.suggestions);
+    onEnhanced(suggestion?.enhanced, suggestion?.suggestions);
     setShowUndo(true);
   };
 
@@ -33,7 +33,6 @@ export const AIEnhanceButton: React.FC<IProps> = ({
     onEnhanced(originalContent, []);
     setShowUndo(false);
   };
-
   return (
     <div className="flex gap-2 items-center">
       <Button

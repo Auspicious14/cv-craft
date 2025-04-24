@@ -33,7 +33,7 @@ export const AiSuggestionContextProvider = ({
         if (response.status !== 200) {
           return;
         }
-        setSuggestion(response.data);
+        setSuggestion(response.data?.data);
       } finally {
         setIsLoading(false);
       }

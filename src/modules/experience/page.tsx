@@ -69,29 +69,38 @@ export default function ExperiencePage() {
                           label="Location"
                           required
                         />
-                        <DatePicker
-                          name={`entries.${index}.fromDate`}
-                          label="Start Date"
-                          required
-                        />
-                        <DatePicker
-                          name={`entries.${index}.toDate`}
-                          label="End Date"
-                          required
-                        />
-                        <div>
-                          <Field
+                        <div className="w-full">
+                          <DatePicker
+                            name={`entries.${index}.fromDate`}
+                            label="Start Date"
+                            required
+                            className="w-full"
+                          />
+                        </div>
+                        <div className="w-full">
+                          <DatePicker
+                            name={`entries.${index}.toDate`}
+                            label="End Date"
+                            required
+                            className="w-full"
+                          />
+                        </div>
+                        <div className="col-span-2">
+                          <TextInput
+                            label="Responsibilty"
                             name={`entries.${index}.description`}
-                            as={TextInput}
-                            label="Responsibilities"
-                            textarea
+                            type="textarea"
+                            rows={4}
                           />
                           <AIEnhanceButton
                             content=""
                             section="experience"
-                            onEnhanced={(enhanced) =>
-                              setFieldValue("description", enhanced)
-                            }
+                            onEnhanced={(enhanced) => {
+                              setFieldValue(
+                                `entries.${index}.description`,
+                                enhanced
+                              );
+                            }}
                           />
                         </div>
                       </div>

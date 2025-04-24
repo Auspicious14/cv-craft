@@ -48,7 +48,7 @@ export const PersonalInfoContextProvider = ({
         if (data) {
           setPersonalInfo(data?.personalInformation);
           toast.success("Success!");
-          router.push(`/cv/${cvId}/academics`);
+          router.push(`/cv/${data?._id}/academics`);
         }
         actions.setSubmitting(false);
       } catch (error) {
