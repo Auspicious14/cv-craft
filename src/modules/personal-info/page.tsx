@@ -80,6 +80,7 @@ export default function PersonalInfoPage() {
                 value={formik.values.description}
                 type="textarea"
                 // rows={4}
+                helperText="Write some description, use AI to enhance"
               />
               <AIEnhanceButton
                 content="Professional Summary"

@@ -91,6 +91,7 @@ export default function ExperiencePage() {
                             name={`entries.${index}.description`}
                             type="textarea"
                             rows={4}
+                            helperText="Write some description, use AI to enhance"
                           />
                           <AIEnhanceButton
                             content=""
