@@ -11,6 +11,7 @@ import { IAcademy } from "./model";
 import { usePersonalInfo } from "../personal-info/context";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useCVState } from "../../context/cv";
 
 export interface IAcademyContext {
   academics: IAcademy[];
@@ -29,14 +30,11 @@ export const AcademyContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  let cvId: any;
+  const { cvId } = useCVState();
   const router = useRouter();
   const [academics, setAcademics] = useState<IAcademy[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    cvId = localStorage.getItem("cvId");
-  }, []);
   const fetchAcademics = useCallback(async () => {
     setIsLoading(true);
     console.log("cv id", cvId);
@@ -51,15 +49,18 @@ export const AcademyContextProvider = ({
   const saveAcademics = useCallback(
     async (payload: IAcademy[], actions: FormikHelpers<any>) => {
       setIsLoading(true);
-      console.log("cv id", cvId);
+      if (!cvId) {
+        toast.error("Missing CV ID");
+        return;
+      }
 
       try {
         const response = await AxiosClient.put(`/cv/${cvId}/academic`, payload);
-        if (response?.data) {
+        const data = response?.data?.data;
+        if (data) {
           setAcademics(response.data);
           toast.success("Success!");
           router.push(`/experience`);
-
           actions.setSubmitting(false);
         }
       } finally {

@@ -11,6 +11,7 @@ import { AxiosClient } from "../../components";
 import { usePersonalInfo } from "../personal-info/context";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useCVState } from "../../context/cv";
 
 export interface IExperienceContext {
   experiences: IExperience[];
@@ -34,14 +35,10 @@ export const ExperienceContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const { cvId } = useCVState();
   const router = useRouter();
-  let cvId: string;
   const [experiences, setExperiences] = useState<IExperience[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    cvId = localStorage.getItem("cvId");
-  }, []);
 
   const fetchExperiences = useCallback(async () => {
     setIsLoading(true);
@@ -51,11 +48,17 @@ export const ExperienceContextProvider = ({
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [cvId]);
 
   const saveExperience = useCallback(
     async (payload: IExperience[], actions: FormikHelpers<any>) => {
       setIsLoading(true);
+
+      if (!cvId) {
+        setIsLoading(false);
+        toast.error("Missing CV ID");
+        return;
+      }
       try {
         const response = await AxiosClient.put(
           `/cv/${cvId}/experience`,
@@ -72,7 +75,7 @@ export const ExperienceContextProvider = ({
         setIsLoading(false);
       }
     },
-    []
+    [cvId]
   );
 
   return (

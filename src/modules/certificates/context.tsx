@@ -11,6 +11,7 @@ import { AxiosClient } from "../../components";
 import { usePersonalInfo } from "../personal-info/context";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useCVState } from "../../context/cv";
 
 interface ICertificateState {
   isLoading: boolean;
@@ -37,18 +38,20 @@ interface IProps {
 }
 
 export const CertificateContextProvider: React.FC<IProps> = ({ children }) => {
-  let cvId: string;
+  const { cvId } = useCVState();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [certificates, setCertificates] = useState<ICertificate[]>([]);
 
-  useEffect(() => {
-    cvId = localStorage.getItem("cvId");
-  }, []);
-
   const saveCertificates = useCallback(
     async (payload: ICertificate[], actions: FormikHelpers<any>) => {
       setIsLoading(true);
+
+      if (!cvId) {
+        toast.error("Missing CV ID");
+        setIsLoading(false);
+        return;
+      }
       try {
         const response = await AxiosClient.put(
           `/cv/${cvId}/certificate`,

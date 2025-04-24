@@ -11,6 +11,7 @@ import { ILanguage } from "./model";
 import { usePersonalInfo } from "../personal-info/context";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useCVState } from "../../context/cv";
 
 export interface ILanguageContext {
   languages: ILanguage[];
@@ -29,15 +30,10 @@ export const LanguageContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  let cvId: string;
+  const { cvId } = useCVState();
   const router = useRouter();
-
   const [languages, setLanguages] = useState<ILanguage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    cvId = localStorage.getItem("cvId");
-  }, []);
 
   const fetchLanguages = useCallback(async () => {
     setIsLoading(true);
@@ -52,6 +48,12 @@ export const LanguageContextProvider = ({
   const saveLanguages = useCallback(
     async (payload: ILanguage[], actions: FormikHelpers<any>) => {
       setIsLoading(true);
+
+      if (!cvId) {
+        setIsLoading(false);
+        toast.error("Missing CV ID");
+        return;
+      }
       try {
         const response = await AxiosClient.put(`/cv/${cvId}/Language`, payload);
         const data = response?.data?.data;
@@ -59,7 +61,7 @@ export const LanguageContextProvider = ({
           setLanguages(response.data);
           toast.success("Success!");
           actions.setSubmitting(false);
-          router.push("/preview");
+          router.push(`/preview`);
         }
       } finally {
         setIsLoading(false);

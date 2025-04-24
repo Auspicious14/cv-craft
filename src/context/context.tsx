@@ -9,6 +9,7 @@ import { SkillContextProvider } from "../modules/skills/context";
 import { AiSuggestionContextProvider } from "./suggestion";
 import { LanguageContextProvider } from "../modules/language/context";
 import { ExportPdfContextProvider } from "../modules/export-pdf/context";
+import { CVContextProvider } from "./cv";
 
 export const combineContext = (...components: FC[]): FC<any> => {
   const CombinedComponent = components.reduce(
@@ -50,6 +51,7 @@ export const combineContext = (...components: FC[]): FC<any> => {
 };
 
 const providers = [
+  CVContextProvider,
   AuthContextProvider,
   PersonalInfoContextProvider,
   ExperienceContextProvider,

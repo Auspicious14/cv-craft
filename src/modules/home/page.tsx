@@ -1,13 +1,13 @@
 import React from "react";
 import { Button } from "../../components";
-import Link from "next/link"
+import Link from "next/link";
 
 export const HomePage = () => {
   return (
     <>
-      <section className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 text-white py-20 px-4">
-        <div className="max-w-6xl mx-auto py-16 text-center">
-          <h1 className="text-5xl xl:text-7xl font-bold mb-6 animate-fade-in-up">
+      <section className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 text-white px-4">
+        <div className="max-w-6xl mx-auto flex flex-col h-screen justify-center items-center text-center">
+          <h1 className="text-6xl xl:text-9xl font-bold mb-6 animate-fade-in-up">
             Craft Your Perfect CV
           </h1>
           <p className="text-xl mb-8 text-gray-200">
@@ -15,11 +15,10 @@ export const HomePage = () => {
           </p>
           <div className="flex justify-center gap-4">
             <Link href="/personal">
-            <Button variant="primary" className="px-8 py-3 text-lg">
-              Get Started
-            </Button>
+              <Button variant="primary" className="px-8 py-3 text-lg">
+                Get Started
+              </Button>
             </Link>
-            
           </div>
         </div>
       </section>

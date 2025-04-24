@@ -11,6 +11,7 @@ import { ISkill } from "./model";
 import { usePersonalInfo } from "../personal-info/context";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useCVState } from "../../context/cv";
 
 export interface ISkillContext {
   skills: ISkill[];
@@ -31,14 +32,10 @@ export const SkillContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  let cvId: string;
+  const { cvId } = useCVState();
   const router = useRouter();
   const [skills, setSkills] = useState<ISkill[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    cvId = localStorage.getItem("cvId");
-  }, []);
 
   const fetchSkills = useCallback(async () => {
     setIsLoading(true);
@@ -53,6 +50,13 @@ export const SkillContextProvider = ({
   const saveSkills = useCallback(
     async (payload: ISkill[], actions: FormikHelpers<any>) => {
       setIsLoading(true);
+
+      if (!cvId) {
+        setIsLoading(false);
+        toast.error("Missing CV ID");
+        return;
+      }
+
       try {
         const response = await AxiosClient.put(`/cv/${cvId}/skill`, payload);
         const data = response?.data?.data;

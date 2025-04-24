@@ -8,6 +8,7 @@ import React, {
 import { AxiosClient } from "../../components";
 import { ICV } from "./model";
 import toast from "react-hot-toast";
+import { useCVState } from "../../context/cv";
 
 export interface IExportPdfContext {
   isLoading: boolean;
@@ -26,29 +27,22 @@ export const ExportPdfContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  // Change initial state from null to undefined to match interface
+  const { cvId } = useCVState();
   const [cv, setCv] = useState<ICV>();
   const [isLoading, setIsLoading] = useState(false);
-  const [cvId, setCvId] = useState<string | null>(null);
-
-  useEffect(() => {
-    const storedCvId = localStorage.getItem("cvId");
-    setCvId(storedCvId || null); // Ensure we store null instead of undefined
-  }, []);
 
   const getCV = useCallback(async () => {
     if (!cvId) {
-      console.error("No cvId found in state");
+      toast.error("Missing CV ID");
       return;
     }
-
     setIsLoading(true);
+
     try {
       const response = await AxiosClient.get(`/api/cv/${cvId}`);
       setCv(response.data);
     } catch (error) {
       console.error("Error fetching CV:", error);
-      setCv(undefined); // Reset CV on error
     } finally {
       setIsLoading(false);
     }
@@ -105,7 +99,7 @@ export const ExportPdfContextProvider = ({
       }
     },
     [cvId]
-  ); // Add cvId as dependency
+  );
 
   return (
     <ExportPdfContext.Provider value={{ isLoading, cv, saveExportPdf, getCV }}>
