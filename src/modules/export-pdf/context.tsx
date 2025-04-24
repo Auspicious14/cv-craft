@@ -9,6 +9,7 @@ import { AxiosClient } from "../../components";
 import { ICV } from "./model";
 import toast from "react-hot-toast";
 import { useCVState } from "../../context/cv";
+import { useRouter } from "next/router";
 
 export interface IExportPdfContext {
   isLoading: boolean;
@@ -27,7 +28,8 @@ export const ExportPdfContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { cvId } = useCVState();
+  const router = useRouter();
+  const { cvId } = router.query;
   const [cv, setCv] = useState<ICV>();
   const [isLoading, setIsLoading] = useState(false);
 

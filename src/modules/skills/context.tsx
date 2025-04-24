@@ -1,17 +1,9 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { createContext, useCallback, useContext, useState } from "react";
 import { FormikHelpers } from "formik";
 import { AxiosClient } from "../../components";
 import { ISkill } from "./model";
-import { usePersonalInfo } from "../personal-info/context";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import toast from "react-hot-toast";
-import { useCVState } from "../../context/cv";
 
 export interface ISkillContext {
   skills: ISkill[];
@@ -32,8 +24,8 @@ export const SkillContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { cvId } = useCVState();
   const router = useRouter();
+  const { cvId } = router.query;
   const [skills, setSkills] = useState<ISkill[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -64,7 +56,7 @@ export const SkillContextProvider = ({
           setSkills(response.data);
           toast.success("Success!");
           actions.setSubmitting(false);
-          router.push("/language");
+          router.push(`/cv/${cvId}/language`);
         }
       } finally {
         setIsLoading(false);

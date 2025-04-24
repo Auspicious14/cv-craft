@@ -1,17 +1,9 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { createContext, useCallback, useContext, useState } from "react";
 import { ICertificate } from "./model";
 import { FormikHelpers } from "formik";
 import { AxiosClient } from "../../components";
-import { usePersonalInfo } from "../personal-info/context";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import toast from "react-hot-toast";
-import { useCVState } from "../../context/cv";
 
 interface ICertificateState {
   isLoading: boolean;
@@ -38,8 +30,8 @@ interface IProps {
 }
 
 export const CertificateContextProvider: React.FC<IProps> = ({ children }) => {
-  const { cvId } = useCVState();
   const router = useRouter();
+  const { cvId } = router.query;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [certificates, setCertificates] = useState<ICertificate[]>([]);
 
@@ -62,7 +54,7 @@ export const CertificateContextProvider: React.FC<IProps> = ({ children }) => {
           setCertificates(data);
           toast.success("Success!");
           actions.setSubmitting(false);
-          router.push(`/skills`);
+          router.push(`/cv/${cvId}/skills`);
         }
       } finally {
         setIsLoading(false);

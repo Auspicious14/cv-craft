@@ -1,17 +1,9 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { createContext, useCallback, useContext, useState } from "react";
 import { FormikHelpers } from "formik";
 import { IExperience } from "./model";
 import { AxiosClient } from "../../components";
-import { usePersonalInfo } from "../personal-info/context";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import toast from "react-hot-toast";
-import { useCVState } from "../../context/cv";
 
 export interface IExperienceContext {
   experiences: IExperience[];
@@ -35,8 +27,8 @@ export const ExperienceContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { cvId } = useCVState();
   const router = useRouter();
+  const { cvId } = router.query;
   const [experiences, setExperiences] = useState<IExperience[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -68,7 +60,7 @@ export const ExperienceContextProvider = ({
         if (data) {
           setExperiences(data);
           toast.success("Success!");
-          router.push(`/certificates`);
+          router.push(`/cv/${cvId}/certificates`);
           actions.setSubmitting(false);
         }
       } finally {

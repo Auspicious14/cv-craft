@@ -2,13 +2,10 @@ import React, { createContext, useCallback, useContext, useState } from "react";
 import { FormikHelpers } from "formik";
 import { AxiosClient } from "../../components";
 import { IPersonalInfo } from "./model";
-import { Router } from "next/router";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import toast from "react-hot-toast";
-import { useCVState } from "../../context/cv";
 
 export interface IPersonalInfoContext {
-  cvId: string;
   personalInfo: IPersonalInfo | null;
   isLoading: boolean;
   savePersonalInfo: (
@@ -28,7 +25,7 @@ export const PersonalInfoContextProvider = ({
   children: React.ReactNode;
 }) => {
   const router = useRouter();
-  const { cvId, setCvId } = useCVState();
+  const { cvId } = router.query;
   const [personalInfo, setPersonalInfo] = useState<IPersonalInfo | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -49,10 +46,9 @@ export const PersonalInfoContextProvider = ({
         const response = await AxiosClient.post("/cv/personal", values);
         const data = response.data?.data;
         if (data) {
-          setCvId(response.data._id);
           setPersonalInfo(data?.personalInformation);
           toast.success("Success!");
-          router.push(`/academics`);
+          router.push(`/cv/${cvId}/academics`);
         }
         actions.setSubmitting(false);
       } catch (error) {
@@ -68,7 +64,6 @@ export const PersonalInfoContextProvider = ({
   return (
     <PersonalInfoContext.Provider
       value={{
-        cvId,
         personalInfo,
         isLoading,
         savePersonalInfo,

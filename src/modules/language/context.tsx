@@ -1,17 +1,9 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { createContext, useCallback, useContext, useState } from "react";
 import { FormikHelpers } from "formik";
 import { AxiosClient } from "../../components";
 import { ILanguage } from "./model";
-import { usePersonalInfo } from "../personal-info/context";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import toast from "react-hot-toast";
-import { useCVState } from "../../context/cv";
 
 export interface ILanguageContext {
   languages: ILanguage[];
@@ -30,8 +22,8 @@ export const LanguageContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { cvId } = useCVState();
   const router = useRouter();
+  const { cvId } = router.query;
   const [languages, setLanguages] = useState<ILanguage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -61,7 +53,7 @@ export const LanguageContextProvider = ({
           setLanguages(response.data);
           toast.success("Success!");
           actions.setSubmitting(false);
-          router.push(`/preview`);
+          router.push(`/cv/${cvId}/preview`);
         }
       } finally {
         setIsLoading(false);

@@ -1,17 +1,9 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { createContext, useCallback, useContext, useState } from "react";
 import { FormikHelpers } from "formik";
 import { AxiosClient } from "../../components";
 import { IAcademy } from "./model";
-import { usePersonalInfo } from "../personal-info/context";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import toast from "react-hot-toast";
-import { useCVState } from "../../context/cv";
 
 export interface IAcademyContext {
   academics: IAcademy[];
@@ -30,8 +22,8 @@ export const AcademyContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { cvId } = useCVState();
   const router = useRouter();
+  const { cvId } = router.query;
   const [academics, setAcademics] = useState<IAcademy[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -60,7 +52,7 @@ export const AcademyContextProvider = ({
         if (data) {
           setAcademics(response.data);
           toast.success("Success!");
-          router.push(`/experience`);
+          router.push(`/cv/${cvId}/experience`);
           actions.setSubmitting(false);
         }
       } finally {

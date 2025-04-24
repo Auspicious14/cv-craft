@@ -11,18 +11,11 @@ export const PreviewPage = () => {
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedCvId = localStorage.getItem("cvId");
-    console.log("storedCvId", storedCvId);
-    if (!storedCvId) {
-      console.error("No CV found in storage");
-      router.push("/");
-    }
-
     if (!cv) {
       getCV();
     }
   }, [getCV, cv]);
-  console.log("cv", cv);
+
   const handleGeneratePdf = async () => {
     await saveExportPdf(selectedTemplate.toLowerCase());
   };
