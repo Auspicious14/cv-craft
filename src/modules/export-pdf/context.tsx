@@ -39,8 +39,10 @@ export const ExportPdfContextProvider = ({
     setIsLoading(true);
 
     try {
-      const response = await AxiosClient.get(`/api/cv/${cvId}`);
-      setCv(response.data);
+      const response = await AxiosClient.get(`/cv/${cvId}`);
+      const data = response.data?.data;
+      console.log("CV response:", { data });
+      setCv(data);
     } catch (error) {
       console.error("Error fetching CV:", error);
     } finally {
