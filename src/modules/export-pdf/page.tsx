@@ -3,12 +3,21 @@ import { useExportPdf } from "./context";
 import { ClassicTemplate } from "./templates/classic";
 import { ModernTemplate } from "./templates/modern";
 import { Button, TemplateSkeleton } from "../../components";
+import { useRouter } from "next/navigation";
 
 export const PreviewPage = () => {
+  const router = useRouter();
   const { getCV, cv, isLoading, saveExportPdf } = useExportPdf();
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
 
   useEffect(() => {
+    const storedCvId = localStorage.getItem("cvId");
+    if (!storedCvId) {
+      console.error("No CV found in storage");
+      router.push("/");
+      return;
+    }
+
     if (!cv) {
       getCV();
     }
