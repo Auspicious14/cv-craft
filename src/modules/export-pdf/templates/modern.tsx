@@ -24,7 +24,7 @@ export const ModernTemplate: React.FC<IProps> = ({ cv }) => {
         <h1 className="text-3xl font-bold">
           {personalInformation.firstName} {personalInformation.lastName}
         </h1>
-        <p className="mt-2">
+        <p className="mt-2 break-all">
           {personalInformation.email} | {personalInformation.phoneNumber}
         </p>
       </header>

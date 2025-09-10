@@ -7,7 +7,7 @@ export interface IAiSuggestionContext {
   saveAiSuggestion: (value: {
     content: string;
     section: string;
-  }) => Promise<void>;
+  }) => Promise<{ enhanced: string; suggestions: string[] }>;
 }
 
 const AiSuggestionContext = createContext<IAiSuggestionContext | undefined>(
@@ -34,6 +34,7 @@ export const AiSuggestionContextProvider = ({
           return;
         }
         setSuggestion(response.data?.data);
+        return response.data?.data;
       } finally {
         setIsLoading(false);
       }
