@@ -94,7 +94,7 @@ export default function ExperiencePage() {
                             helperText="Write some description, use AI to enhance"
                           />
                           <AIEnhanceButton
-                            content=""
+                            content={values.entries[index].description}
                             section="experience"
                             onEnhanced={(enhanced) => {
                               setFieldValue(

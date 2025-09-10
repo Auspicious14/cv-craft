@@ -20,13 +20,15 @@ export const AIEnhanceButton: React.FC<IProps> = ({
   const handleEnhance = async () => {
     setOriginalContent(content);
 
-    await saveAiSuggestion({
+    const newSuggestion = await saveAiSuggestion({
       section,
       content,
     });
 
-    onEnhanced(suggestion?.enhanced, suggestion?.suggestions);
-    setShowUndo(true);
+    if (newSuggestion) {
+      onEnhanced(newSuggestion.enhanced, newSuggestion.suggestions);
+      setShowUndo(true);
+    }
   };
 
   const handleUndo = () => {

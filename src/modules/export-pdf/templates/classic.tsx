@@ -27,7 +27,7 @@ export const ClassicTemplate: React.FC<IProps> = ({ cv }) => {
           {personalInformation.firstName} {personalInformation.lastName}
         </h1>
         <p className="mt-1">{personalInformation.address}</p>
-        <p className="mt-1">
+        <p className="mt-1 break-all">
           {personalInformation.email} | {personalInformation.phoneNumber}
         </p>
       </div>
