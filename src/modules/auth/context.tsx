@@ -2,7 +2,7 @@ import React, { createContext, useCallback, useContext, useState } from "react";
 import { FormikHelpers } from "formik";
 import { AxiosClient } from "../../components";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 
 export interface AuthContextType {
   user: any;

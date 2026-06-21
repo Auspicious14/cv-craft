@@ -18,6 +18,7 @@ export const Button: FC<IButtonProps> = ({
   size = "md",
   icon: Icon,
   isLoading = false,
+  type = "button",
   className,
   children,
   ...props
@@ -38,9 +39,10 @@ export const Button: FC<IButtonProps> = ({
 
   return (
     <button
+      type={type}
       {...props}
       className={clsx(
-        "inline-flex items-center justify-center rounded-md font-medium transition-colors cursor-pointer",
+        "inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-200 cursor-pointer active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60 disabled:pointer-events-none shadow-sm",
         variantStyles[variant],
         sizeStyles[size],
         className

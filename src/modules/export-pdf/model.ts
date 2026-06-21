@@ -5,6 +5,10 @@ import { ILanguage } from "../language/model";
 import { IPersonalInfo } from "../personal-info/model";
 import { ISkill } from "../skills/model";
 
+export const PDF_TEMPLATES = ["classic", "modern", "ats"] as const;
+
+export type TPdfTemplate = (typeof PDF_TEMPLATES)[number];
+
 export interface ICV {
   personalInformation: IPersonalInfo;
   academic: IAcademy[];

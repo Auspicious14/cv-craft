@@ -1,13 +1,18 @@
 import React, { createContext, useCallback, useContext, useState } from "react";
 import { AxiosClient } from "../components";
 
+export interface IAiSuggestionResult {
+  enhanced: string;
+  suggestions: string[];
+}
+
 export interface IAiSuggestionContext {
-  suggestion: { enhanced: string; suggestions: string[] };
+  suggestion: IAiSuggestionResult | null;
   isLoading: boolean;
   saveAiSuggestion: (value: {
     content: string;
     section: string;
-  }) => Promise<{ enhanced: string; suggestions: string[] }>;
+  }) => Promise<IAiSuggestionResult | undefined>;
 }
 
 const AiSuggestionContext = createContext<IAiSuggestionContext | undefined>(
@@ -19,10 +24,7 @@ export const AiSuggestionContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [suggestion, setSuggestion] = useState<{
-    enhanced: string;
-    suggestions: string[];
-  }>(null);
+  const [suggestion, setSuggestion] = useState<IAiSuggestionResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const saveAiSuggestion = useCallback(
@@ -51,4 +53,12 @@ export const AiSuggestionContextProvider = ({
   );
 };
 
-export const useAiSuggestion = () => useContext(AiSuggestionContext);
+export const useAiSuggestion = () => {
+  const context = useContext(AiSuggestionContext);
+
+  if (!context) {
+    throw new Error("useAiSuggestion must be used within AiSuggestionContextProvider");
+  }
+
+  return context;
+};

@@ -38,6 +38,7 @@ export const AIEnhanceButton: React.FC<IProps> = ({
   return (
     <div className="flex gap-2 items-center">
       <Button
+        type="button"
         variant="primary"
         onClick={handleEnhance}
         disabled={isLoading}
@@ -48,6 +49,7 @@ export const AIEnhanceButton: React.FC<IProps> = ({
 
       {showUndo && (
         <Button
+          type="button"
           onClick={handleUndo}
           variant="danger"
           title="Revert to original"

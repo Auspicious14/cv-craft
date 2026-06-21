@@ -15,11 +15,40 @@ export default function SignUpPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 w-full max-w-md">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-6 text-center">
-          Create Account
-        </h1>
+    <div className="min-h-screen px-4 py-10 text-slate-900 dark:text-slate-50 bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.12),_transparent_32%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.12),_transparent_30%),linear-gradient(180deg,_#f8fafc_0%,_#eef2ff_100%)] dark:bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.16),_transparent_32%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.12),_transparent_30%),linear-gradient(180deg,_#020617_0%,_#0f172a_100%)]">
+      <div className="mx-auto grid min-h-[calc(100vh-5rem)] w-full max-w-5xl items-center lg:grid-cols-[0.95fr_1.05fr]">
+        <div className="hidden h-full flex-col justify-between rounded-[2rem] border border-slate-200/80 bg-white/70 p-8 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur lg:flex dark:border-slate-800 dark:bg-slate-900/70">
+          <div>
+            <div className="mb-6 inline-flex rounded-full border border-slate-200 bg-white px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:border-slate-700 dark:bg-slate-950/50 dark:text-slate-300">
+              Create workspace
+            </div>
+            <h1 className="max-w-md text-4xl font-display font-semibold tracking-tight text-slate-900 dark:text-white">
+              Make an account and keep every CV draft in sync.
+            </h1>
+            <p className="mt-4 max-w-md text-sm leading-6 text-slate-600 dark:text-slate-300">
+              Store personal info, experience, and AI-enhanced copy in one place
+              without losing the thread between sessions.
+            </p>
+          </div>
+          <div className="grid gap-3 text-sm text-slate-600 dark:text-slate-300">
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-800 dark:bg-slate-950/40">
+              Quick onboarding, no cluttered setup.
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-800 dark:bg-slate-950/40">
+              Access your exports and revisions from anywhere.
+            </div>
+          </div>
+        </div>
+
+        <div className="mx-auto w-full max-w-md rounded-[2rem] border border-slate-200/80 bg-white/85 p-8 shadow-[0_24px_90px_rgba(15,23,42,0.12)] backdrop-blur dark:border-slate-800 dark:bg-slate-900/85">
+          <div className="mb-8 text-center lg:text-left">
+            <h2 className="text-3xl font-display font-semibold tracking-tight text-slate-900 dark:text-white">
+              Create account
+            </h2>
+            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+              Start building your CV workspace.
+            </p>
+          </div>
         <Formik
           initialValues={{
             firstName: "",
@@ -34,7 +63,7 @@ export default function SignUpPage() {
             });
           }}
         >
-          {({ handleSubmit, handleChange, values, errors, touched }) => (
+          {({ handleSubmit, handleChange, values }) => (
             <form onSubmit={handleSubmit} className="space-y-4">
               <TextInput
                 label="First Name"
@@ -71,7 +100,7 @@ export default function SignUpPage() {
               />
               <Button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                className="w-full bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
                 disabled={isLoading}
               >
                 {isLoading ? "Creating account..." : "Sign Up"}
@@ -79,15 +108,16 @@ export default function SignUpPage() {
             </form>
           )}
         </Formik>
-        <p className="text-center mt-4 text-gray-600 dark:text-gray-300">
+        <p className="mt-6 text-center text-sm text-slate-600 dark:text-slate-300">
           Already have an account?{" "}
           <Link
             href="/signin"
-            className="text-blue-600 dark:text-blue-400 hover:underline"
+            className="font-medium text-slate-900 transition hover:underline dark:text-white"
           >
             Sign In
           </Link>
         </p>
+      </div>
       </div>
     </div>
   );

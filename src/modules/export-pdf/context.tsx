@@ -2,13 +2,12 @@ import React, {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useState,
 } from "react";
 import { AxiosClient } from "../../components";
-import { ICV } from "./model";
+import axios from "axios";
+import { ICV, PDF_TEMPLATES, TPdfTemplate } from "./model";
 import toast from "react-hot-toast";
-import { useCVState } from "../../context/cv";
 import { useRouter } from "next/router";
 
 export interface IExportPdfContext {
@@ -16,7 +15,7 @@ export interface IExportPdfContext {
   cv: ICV | undefined;
   getCV: () => Promise<void>;
 
-  saveExportPdf: (template: string) => Promise<void>;
+  saveExportPdf: (template: TPdfTemplate) => Promise<void>;
 }
 
 const ExportPdfContext = createContext<IExportPdfContext | undefined>(
@@ -43,7 +42,6 @@ export const ExportPdfContextProvider = ({
     try {
       const response = await AxiosClient.get(`/cv/${cvId}`);
       const data = response.data?.data;
-      console.log("CV response:", { data });
       setCv(data);
     } catch (error) {
       console.error("Error fetching CV:", error);
@@ -52,12 +50,16 @@ export const ExportPdfContextProvider = ({
     }
   }, [cvId]);
 
-  // Add cvId to dependency array
   const saveExportPdf = useCallback(
-    async (template: string) => {
+    async (template: TPdfTemplate) => {
       if (!cvId) {
         toast.error("Cannot save PDF: No cv found");
-        return;
+        throw new Error("Missing CV ID");
+      }
+
+      if (!PDF_TEMPLATES.includes(template)) {
+        toast.error("Invalid template selected");
+        throw new Error("Invalid template selected");
       }
 
       setIsLoading(true);
@@ -74,30 +76,57 @@ export const ExportPdfContextProvider = ({
         );
 
         const contentDisposition = response.headers["content-disposition"];
-        console.log("PDF generation response:", {
-          status: response.status,
-          headers: response.headers,
-          data: response.data,
-        });
-        const fileNameMatch = contentDisposition.match(
+        const fileNameMatch = contentDisposition?.match(
           /filename=['"]?([^'"]+)['"]?/
         );
         const fileName = fileNameMatch
           ? decodeURIComponent(fileNameMatch[1].trim())
-          : "cv.pdf";
+          : `cv-${cvId}-${template}.pdf`;
 
-        // Create download link for PDF
-        const url = window.URL.createObjectURL(
-          new Blob([response.data], { type: "application/pdf" })
-        );
-        window.open(url);
+        const blob =
+          response.data instanceof Blob
+            ? response.data
+            : new Blob([response.data], { type: "application/pdf" });
+        const url = window.URL.createObjectURL(blob);
 
         const link = document.createElement("a");
         link.href = url;
         link.setAttribute("download", fileName);
+        link.style.display = "none";
         document.body.appendChild(link);
         link.click();
-        link.parentNode?.removeChild(link);
+        link.remove();
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          if (!error.response) {
+            toast.error("Network error while generating the PDF");
+            throw new Error("Network error while generating the PDF");
+          }
+
+          const responseData = error.response.data;
+          if (responseData instanceof Blob) {
+            try {
+              const responseText = await responseData.text();
+              const parsed = JSON.parse(responseText);
+              const message =
+                parsed?.message || parsed?.error || "Unable to generate PDF";
+              toast.error(message);
+              throw new Error(message);
+            } catch (blobError) {
+              const fallbackMessage = "Unable to generate PDF";
+              toast.error(fallbackMessage);
+              throw new Error(fallbackMessage);
+            }
+          }
+
+          const message =
+            error.response.data?.message || "Unable to generate PDF";
+          toast.error(message);
+          throw new Error(message);
+        }
+
+        throw error;
       } finally {
         setIsLoading(false);
       }
