@@ -83,7 +83,7 @@ export default function PersonalInfoPage() {
                 helperText="Write some description, use AI to enhance"
               />
               <AIEnhanceButton
-                content="Professional Summary"
+                content={formik.values.description}
                 section="personal"
                 onEnhanced={(enhanced) => {
                   formik.setFieldValue("description", enhanced);
